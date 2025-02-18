@@ -17,7 +17,10 @@ function App() {
       try{
         const response=await fetch("https://multerb1.vercel.app/upload",{
           method:"POST",
-          body:formdata
+          body:formdata,
+          headers:{
+            "Content-Type":"application/json"
+          }
         })
         const r=await response.json()
 
