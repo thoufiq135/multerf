@@ -15,7 +15,7 @@ function App() {
       const formdata=new FormData()
       formdata.append("file",select)
       try{
-        const response=await fetch("https://multerb2.vercel.app/upload",{
+        const response=await fetch("https://multerb1.vercel.app/upload",{
           method:"POST",
           body:formdata,
           headers:{
