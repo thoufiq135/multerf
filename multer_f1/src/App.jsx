@@ -4,6 +4,8 @@ function App() {
   const[select,setselect]=useState(null)
   const[show,setshow]=useState(false)
   const[file,setfile]=useState(null)
+  const [fileUrl, setFileUrl] = useState(null);
+  const [fileType, setFileType] = useState("");
   const selectfile=(e)=>{
     setselect(e.target.files[0])
   }
@@ -36,7 +38,27 @@ function App() {
     }
   
   }
+async function fetchfile() {
+  try{
+    console.log("Name=",file.name)
+    const response=await fetch("https://multerbf1.vercel.app/upload/view",{
+     method:"POST",
+     body:JSON.stringify({
+     
+      Name:file.name
+     }),headers:{
+      "Content-Type":"application/json"
+     }
+    })  
+    const r= await response.blob()
+    const url=URL.createObjectURL(r)
+    setFileUrl(url)
+    setFileType(r.type)
 
+  }catch(e){
+    console.log(e)
+  }
+}
 
   return (
     <>
@@ -60,7 +82,16 @@ function App() {
           <p><strong>Original Name:</strong> {file.originalname}</p>
           <p><strong>MIME Type:</strong> {file.mimetype}</p>
           <p><strong>Size:</strong> {file.size} bytes</p>
+          <button onClick={fetchfile}>View file</button>
         </div>
+      )}
+      {fileUrl&&(
+        <>
+        {fileType.startsWith("image/")&& <img src={fileUrl}/>}
+        {fileType==="application/pdf" && <iframe id="frame" style={{height:"100vh",width:"100vw"}} src={fileUrl}></iframe>}
+        {!fileType.startsWith("image/") && fileType !== "application/pdf" && (
+                        <p>Unsupported file type</p>)}
+        </>
       )}
 
     </>   
